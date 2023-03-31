@@ -13,18 +13,33 @@ import {
 import { theme } from "./src/infrastructure/theme";
 import { RestaurantsScreen } from "./src/features/restaurants/screens/restaurants.screen";
 import { SafeArea } from "./src/components/utility/safe-area.component";
-import { Ionicons } from "@expo/vector-icons";
+
+import { SvgXml } from "react-native-svg";
+
+import menuProfileBlack from "./assets/menu-profile-black";
+import menuProfileRed from "./assets/menu-profile-red";
+
+import menuChatBlack from "./assets/menu-chat-black";
+import menuChatRed from "./assets/menu-chat-red";
+
+import menuLogoBlack from "./assets/menu-logo-black";
+import menuLogoRed from "./assets/menu-logo-red";
 
 const Tab = createBottomTabNavigator();
 
-const Settings = () => (
+const Profile = () => (
   <SafeArea>
-    <Text>Settings</Text>
+    <Text style={{ fontSize: 20, padding: 20 }}>Profile screen</Text>
+  </SafeArea>
+);
+const Chat = () => (
+  <SafeArea>
+    <Text style={{ fontSize: 20, padding: 20 }}>Chat screen</Text>
   </SafeArea>
 );
 const Map = () => (
   <SafeArea>
-    <Text>Map</Text>
+    <Text style={{ fontSize: 20, padding: 20 }}>Map screen</Text>
   </SafeArea>
 );
 
@@ -43,29 +58,48 @@ export default function App() {
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({ route }) => ({
-              tabBarIcon: ({ color, size }) => {
-                let iconName;
-
-                if (route.name === "Restaurants") {
-                  iconName = "md-restaurant";
-                } else if (route.name === "Settings") {
-                  iconName = "md-settings";
-                } else if (route.name === "Map") {
-                  iconName = "md-map";
+              // eslint-disable-next-line react/no-unstable-nested-components
+              tabBarIcon: ({ focused }) => {
+                let iconXML;
+                if (route.name === "Map") {
+                  if (focused) {
+                    iconXML = menuLogoRed;
+                  } else {
+                    iconXML = menuLogoBlack;
+                  }
+                } else if (route.name === "Chat") {
+                  if (focused) {
+                    iconXML = menuChatRed;
+                  } else {
+                    iconXML = menuChatBlack;
+                  }
+                } else if (route.name === "Profile") {
+                  if (focused) {
+                    iconXML = menuProfileRed;
+                  } else {
+                    iconXML = menuProfileBlack;
+                  }
                 }
-
-                // You can return any component that you like here!
-                return <Ionicons name={iconName} size={size} color={color} />;
+                return <SvgXml xml={iconXML} width={39} height={39} />;
               },
+              tabBarStyle: {
+                backgroundColor: "#fff",
+                borderTopWidth: 2,
+                borderStyle: "solid",
+                borderTopColor: "#FD0E46",
+                height: 68,
+              },
+              headerShown: false,
             })}
             tabBarOptions={{
-              activeTintColor: "tomato",
-              inactiveTintColor: "gray",
+              activeTintColor: "#FD0E46",
+              inactiveTintColor: "#1D1C17",
+              showLabel: false,
             }}
           >
-            <Tab.Screen name="Restaurants" component={RestaurantsScreen} />
             <Tab.Screen name="Map" component={Map} />
-            <Tab.Screen name="Settings" component={Settings} />
+            <Tab.Screen name="Chat" component={Chat} />
+            <Tab.Screen name="Profile" component={Profile} />
           </Tab.Navigator>
         </NavigationContainer>
       </ThemeProvider>
