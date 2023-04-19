@@ -1,9 +1,12 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Text } from "react-native";
 import { ThemeProvider } from "styled-components/native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 import {
   useFonts as useMontserrat,
@@ -25,6 +28,8 @@ import menuChatRed from "./assets/menu-chat-red";
 import menuLogoBlack from "./assets/menu-logo-black";
 import menuLogoRed from "./assets/menu-logo-red";
 
+import { peopleRequest } from "./src/services/people/people.service";
+
 const Tab = createBottomTabNavigator();
 
 const Profile = () => (
@@ -43,7 +48,42 @@ const Map = () => (
   </SafeArea>
 );
 
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCWLxDtDwGqkfh7aPJvRZTxCYUECEZo_3Q",
+  authDomain: "geolove-39f3f.firebaseapp.com",
+  projectId: "geolove-39f3f",
+  storageBucket: "geolove-39f3f.appspot.com",
+  messagingSenderId: "936740394889",
+  appId: "1:936740394889:web:11618a5febfcf06d583358",
+};
+
+const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
+
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    signInWithEmailAndPassword(auth, "rubanwd@gmail.com", "test123")
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        setIsAuthenticated(true);
+        // console.log("user", user);
+        // ...
+      })
+      .catch((error) => {
+        console.log("error", error);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("errorCode", errorCode);
+        console.log("errorMessage", errorMessage);
+      });
+    console.log("trwwwwww");
+  }, []);
+
   const [MontserratLoaded] = useMontserrat({
     Montserrat_400Regular,
   });
@@ -51,6 +91,10 @@ export default function App() {
   if (!MontserratLoaded) {
     return null;
   }
+
+  console.log("isAuthenticated", isAuthenticated);
+
+  if (!isAuthenticated) return null;
 
   return (
     <>
